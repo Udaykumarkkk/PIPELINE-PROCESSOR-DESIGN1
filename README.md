@@ -93,6 +93,8 @@ always @(posedge clk or posedge reset) begin
             reg_file[i] <= 0;
         end
     end else begin
+       
+        
         // Fetch stage
         instruction <= memory[pc];
         pc <= pc + 4;
