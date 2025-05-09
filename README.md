@@ -168,3 +168,8 @@ Suppose we want to execute the following program:
 The simulation will show the pipeline stages operating in sequence, with each stage performing its designated function. The final result will be stored in register R4.
 
 By designing and simulating a four-stage pipeline processor, we can demonstrate the basic principles of pipelining and instruction-level parallelism. This design can be extended to more complex processors with additional pipeline stages and instructions.
+
+
+
+## OUTPUT
+
