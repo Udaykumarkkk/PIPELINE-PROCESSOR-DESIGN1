@@ -1,0 +1,189 @@
+module pipelined_processor(
+    input clk,
+    input reset
+);
+
+reg [31:0] pc;
+reg [31:0] instruction;
+reg [31:0] reg_file [0:31];
+
+wire [5:0] opcode;
+wire [4:0] rs, rt, rd;
+wire [15:0] immediate;
+
+assign opcode = instruction[31:26];
+assign rs = instruction[25:21];
+assign rt = instruction[20:16];
+assign rd = instruction[15:11];
+assign immediate = instruction[15:0];
+
+reg [31:0] if_id_instruction;
+reg [31:0] id_ex_rs, id_ex_rt;
+reg [4:0] id_ex_rd;
+reg [15:0] id_ex_immediate;
+reg [31:0] ex_wb_result;
+reg [4:0] ex_wb_rd;
+
+always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        pc <= 0;
+        // Initialize register file
+        for (int i = 0; i < 32; i++) begin
+            reg_file[i] <= 0;
+        end
+    end else begin
+        // Fetch stage
+        instruction <= memory[pc];
+        pc <= pc + 4;
+
+        // Decode stage
+        if_id_instruction <= instruction;
+        id_ex_rs <= reg_file[rs];
+        id_ex_rt <= reg_file[rt];
+        id_ex_rd <= rd;
+        id_ex_immediate <= immediate;
+
+        // Execute stage
+        case (opcode)
+            6'b100000: // ADD
+                ex_wb_result <= id_ex_rs + id_ex_rt;
+            6'b100010: // SUB
+                ex_wb_result <= id_ex_rs - id_ex_rt;
+            default:
+                ex_wb_result <= 0;
+        endcase
+        ex_wb_rd <= id_ex_rd;
+
+        // Write Back stage
+        reg_file[ex_wb_rd] <= ex_wb_result;
+    end
+end
+
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module pipelined_processor_tb;
+
+reg clk;
+reg reset;
+
+pipelined_processor u_processor(
+    .clk(clk),
+    .reset(reset)
+);
+
+initial begin
+    clk = 0;
+    reset = 1;
+    #100 reset = 0;
+end
+
+always #5 clk = ~clk;
+
+initial begin
+    #1000 $finish;
+end
+
+endmodule
+
+
+
+
+
+
+
+
+
+
+module pipelined_processor (
+    input wire clk,
+    input wire reset
+);
+
+reg [31:0] pc;
+reg [31:0] reg_file [0:31];
+reg [31:0] memory [0:255]; // Simple instruction + data memory
+
+// Instruction fields
+wire [5:0] opcode;
+wire [4:0] rs, rt, rd;
+wire [15:0] immediate;
+assign opcode    = if_id_instruction[31:26];
+assign rs        = if_id_instruction[25:21];
+assign rt        = if_id_instruction[20:16];
+assign rd        = if_id_instruction[15:11];
+assign immediate = if_id_instruction[15:0];
+
+// Pipeline registers
+reg [31:0] if_id_instruction;
+
+reg [31:0] id_ex_rs_data, id_ex_rt_data;
+reg [4:0]  id_ex_rd;
+reg [5:0]  id_ex_opcode;
+
+reg [31:0] ex_wb_result;
+reg [4:0]  ex_wb_rd;
+reg        ex_wb_regwrite;
+
+// Fetch (IF)
+always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        pc <= 0;
+    end else begin
+        if_id_instruction <= memory[pc >> 2];
+        pc <= pc + 4;
+    end
+end
+
+// Decode (ID)
+always @(posedge clk) begin
+    id_ex_rs_data <= reg_file[rs];
+    id_ex_rt_data <= reg_file[rt];
+    id_ex_rd      <= rd;
+    id_ex_opcode  <= opcode;
+end
+
+// Execute (EX)
+always @(posedge clk) begin
+    case (id_ex_opcode)
+        6'b100000: begin // ADD
+            ex_wb_result <= id_ex_rs_data + id_ex_rt_data;
+            ex_wb_regwrite <= 1;
+        end
+        6'b100010: begin // SUB
+            ex_wb_result <= id_ex_rs_data - id_ex_rt_data;
+            ex_wb_regwrite <= 1;
+        end
+        default: begin
+            ex_wb_result <= 0;
+            ex_wb_regwrite <= 0;
+        end
+    endcase
+    ex_wb_rd <= id_ex_rd;
+end
+
+// Write Back (WB)
+always @(posedge clk) begin
+    if (ex_wb_regwrite && ex_wb_rd != 0)
+        reg_file[ex_wb_rd] <= ex_wb_result;
+end
+
+endmodule
+

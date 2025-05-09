@@ -1,0 +1,8 @@
+verilog xil_defaultlib  \
+"C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/srcs/sources_1/new/pipeline.v" \
+"C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/srcs/sim_1/new/tb.v" \
+
+verilog xil_defaultlib "C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/glbl.v"
+
+# Do not sort compile order
+nosort

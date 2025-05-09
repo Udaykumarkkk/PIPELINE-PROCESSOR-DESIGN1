@@ -1,0 +1,3 @@
+pipeline.v,verilog,xil_defaultlib,C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/srcs/pipeline.v,
+tb.v,verilog,xil_defaultlib,C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/srcs/tb.v,
+glbl.v,Verilog,xil_defaultlib,C:/Users/karan/OneDrive/Desktop/vlsi tasks/task3/xsim/glbl.v
