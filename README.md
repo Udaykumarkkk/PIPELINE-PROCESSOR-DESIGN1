@@ -173,3 +173,5 @@ By designing and simulating a four-stage pipeline processor, we can demonstrate 
 
 ## OUTPUT
 
+![Image](https://github.com/user-attachments/assets/e377a4fc-6185-4edf-b07d-656d06effc88)
+
