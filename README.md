@@ -18,6 +18,7 @@
 
 ## Four-Stage Pipeline Processor Design
 The four-stage pipeline processor is designed to execute basic instructions like ADD, SUB, and LOAD. The pipeline stages are:
+![2](https://github.com/user-attachments/assets/5f9be9e1-ec2f-4735-a14a-15f01b954c95)
 
 1. Instruction Fetch (IF): Fetches instructions from memory.
 2. Instruction Decode (ID): Decodes the instruction and retrieves operands.
@@ -43,6 +44,7 @@ The ISA will include the following instructions:
 ### Instruction Fetch (IF)
 - Fetches the instruction from instruction memory.
 - Increments the program counter (PC) to point to the next instruction.
+![1](https://github.com/user-attachments/assets/bba18590-afda-4335-8e13-410ca84ccac6)
 
 ### Instruction Decode (ID)
 - Decodes the instruction and retrieves the operands from the register file.
